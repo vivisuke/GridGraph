@@ -1,3 +1,16 @@
-[gd_scene format=3 uid="uid://chjo4wwmyfkgb"]
+[gd_scene load_steps=2 format=3 uid="uid://chjo4wwmyfkgb"]
+
+[ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_i8dcp"]
 
 [node name="Main" type="Node2D"]
+
+[node name="BG" type="ColorRect" parent="."]
+offset_right = 500.0
+offset_bottom = 900.0
+color = Color(0.501961, 0.752941, 0.501961, 1)
+
+[node name="TitleBar" type="ColorRect" parent="."]
+offset_right = 500.0
+offset_bottom = 50.0
+color = Color(0.133333, 0.545098, 0.133333, 1)
+script = ExtResource("1_i8dcp")
