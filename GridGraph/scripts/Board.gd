@@ -95,6 +95,15 @@ func init_links():
 		h_link[ix2+y*ARY_WIDTH] = UNLINKED_DTM
 	assert( h_link[xyToIX(-1, 0)] == UNLINKED_DTM )
 	assert( v_link[xyToIX(0, -1)] == UNLINKED_DTM )
+func print_degree():
+	print("vertex degree:")
+	for y in range(N_VERT+1):
+		var txt = ""
+		for x in range(N_HORZ+1):
+			var ix = xyToIX(x, y)
+			txt += "%d " % degree[ix]
+		print(txt)
+	print("\n")
 func print_board():
 	print("board:")
 	for y in range(N_VERT):

@@ -17,6 +17,7 @@ func xyToIX(x, y): return x + (y+1)*ARY_WIDTH
 func _ready():
 	bd = CBoard.new()
 	bd.print_board()
+	bd.print_degree()
 	pass # Replace with function body.
 
 func _process(delta):
