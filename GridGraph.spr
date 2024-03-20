@@ -10,8 +10,8 @@
 0008 ◎ C 03/20 03/20 0.001│ToDo│Board.print_degree()
 0009 ◎ C 03/20 03/20 0.001│ToDo│Board.make_h_link(ix), make_v_link(ix)
 0010 ◎ C 03/20 03/20 0.001│ToDo│Board.count[] 追加
-0011 ● C 03/20            │ToDo│
-0012 ● C 03/20            │ToDo│
+0011 ◎ C 03/20 03/20 0.001│ToDo│Board.make_h_unlink(ix), make_v_unlink(ix)
+0012 ◎ C 03/20 03/20 0.001│ToDo│Board.unmake_h_link(ix), unmake_v_link(ix)
 0013 ● C 03/20            │ToDo│
 0014 ● C 03/20            │ToDo│
 0015 ● C 03/20            │ToDo│

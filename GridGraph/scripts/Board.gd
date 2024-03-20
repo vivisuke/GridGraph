@@ -110,6 +110,22 @@ func make_v_link(ix):
 	degree[ix+ARY_WIDTH] += 1
 	count[ix] += 1
 	count[ix-1] += 1
+func unmake_h_link(ix):			# make_h_link() 処理を戻す
+	h_link[ix] = EMPTY
+	degree[ix] -= 1
+	degree[ix+1] -= 1
+	count[ix] -= 1
+	count[ix-ARY_WIDTH] -= 1
+func unmake_v_link(ix):			# make_v_link() 処理を戻す
+	v_link[ix] = EMPTY
+	degree[ix] -= 1
+	degree[ix+ARY_WIDTH] -= 1
+	count[ix] -= 1
+	count[ix-1] -= 1
+func make_h_unlink(ix):
+	h_link[ix] = UNLINKED
+func make_v_unlink(ix):
+	v_link[ix] = UNLINKED
 func print_degree():
 	print("vertex degree:")
 	for y in range(N_VERT+1):
