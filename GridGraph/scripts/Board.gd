@@ -59,6 +59,8 @@ func set_board_size(n):
 	v_link.fill(0)
 	mate.resize(ARY_SIZE)
 	for i in range(ARY_SIZE): mate[i] = i		# 非連結
+	degree.resize(ARY_SIZE)
+	degree.fill(0)
 	ix99 = xyToIX(N_HORZ, N_VERT)
 	init_links()
 	assert( h_link[xyToIX(-1, 0)] == UNLINKED_DTM )
@@ -67,6 +69,13 @@ func clear_clue_nums():
 	for y in range(N_VERT):
 		for x in range(N_HORZ):
 			clue_num[xyToIX(x, y)] = ANY
+func clear_edges():
+	for y in range(N_VERT+1):
+		for x in range(N_HORZ):
+			h_link[xyToIX(x, y)] = EMPTY
+	for y in range(N_VERT):
+		for x in range(N_HORZ+1):
+			v_link[xyToIX(x, y)] = EMPTY
 func init_links():
 	h_link.fill(EMPTY)
 	v_link.fill(EMPTY)
