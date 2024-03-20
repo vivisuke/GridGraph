@@ -12,11 +12,11 @@
 0010 ◎ C 03/20 03/20 0.001│ToDo│Board.count[] 追加
 0011 ◎ C 03/20 03/20 0.001│ToDo│Board.make_h_unlink(ix), make_v_unlink(ix)
 0012 ◎ C 03/20 03/20 0.001│ToDo│Board.unmake_h_link(ix), unmake_v_link(ix)
-0013 ● C 03/20            │ToDo│
-0014 ● C 03/20            │ToDo│
-0015 ● C 03/20            │ToDo│
-0016 ● C 03/20            │ToDo│
-0017 ● C 03/20            │ToDo│
-0018 ● C 03/20            │ToDo│
-0019 ● C 03/20            │ToDo│
-0020 ● C 03/20            │ToDo│
+0013 ● C 03/20            │ToDo│count[] を lnk_count[] にリネームし、ul_count[] 追加
+0014 ● C 03/20            │ToDo│make_h_link(), make_v_link()：mate[] 更新
+0015 ● C 03/20            │ToDo│clear_edges() をコールしても、degree[] が初期化されない
+0016 ◎ C 03/21 03/21 0.001│ToDo│連結エッジ端点数カウント・表示
+0017 ● C 03/21            │ToDo│
+0018 ● C 03/21            │ToDo│
+0019 ● C 03/21            │ToDo│
+0020 ● C 03/21            │ToDo│

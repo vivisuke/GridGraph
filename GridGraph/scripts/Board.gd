@@ -26,8 +26,10 @@ var h_link = []			# 各格子点の右連結フラグ
 var v_link = []			# 各格子点の下連結フラグ
 var mate = []			# 連結先配列、端点以外は値: 0
 var degree = []			# 頂点次数
-var count = []			# セル周囲連結エッジ数
+var lnk_count = []		# セル周囲連結エッジ数
+var ul_count = []		# セル周囲非連結エッジ数
 var dir_order = [LINK_UP, LINK_DOWN, LINK_LEFT, LINK_RIGHT]
+var n_end_pnt = 0		# 端点数
 var solved = false		# 解探索成功
 var finished = false	# 探索終了
 var n_solved = 0		# 発見解数
@@ -62,8 +64,10 @@ func set_board_size(n):
 	for i in range(ARY_SIZE): mate[i] = i		# 非連結
 	degree.resize(ARY_SIZE)
 	degree.fill(0)
-	count.resize(ARY_SIZE)
-	count.fill(0)
+	lnk_count.resize(ARY_SIZE)
+	lnk_count.fill(0)
+	ul_count.resize(ARY_SIZE)
+	ul_count.fill(0)
 	ix99 = xyToIX(N_HORZ, N_VERT)
 	init_links()
 	assert( h_link[xyToIX(-1, 0)] == UNLINKED_DTM )
@@ -73,12 +77,18 @@ func clear_clue_nums():
 		for x in range(N_HORZ):
 			clue_num[xyToIX(x, y)] = ANY
 func clear_edges():
+	n_end_pnt = 0
 	for y in range(N_VERT+1):
 		for x in range(N_HORZ):
 			h_link[xyToIX(x, y)] = EMPTY
 	for y in range(N_VERT):
 		for x in range(N_HORZ+1):
 			v_link[xyToIX(x, y)] = EMPTY
+	degree.fill(0)
+	lnk_count.fill(0)
+	ul_count.fill(0)
+	for i in range(mate.size()):
+		mate[i] = i
 func init_links():
 	h_link.fill(EMPTY)
 	v_link.fill(EMPTY)
@@ -102,30 +112,75 @@ func make_h_link(ix):
 	h_link[ix] = LINKED
 	degree[ix] += 1
 	degree[ix+1] += 1
-	count[ix] += 1
-	count[ix-ARY_WIDTH] += 1
+	lnk_count[ix] += 1
+	lnk_count[ix-ARY_WIDTH] += 1
+	connect_edge(ix, ix+1)
 func make_v_link(ix):
 	v_link[ix] = LINKED
 	degree[ix] += 1
 	degree[ix+ARY_WIDTH] += 1
-	count[ix] += 1
-	count[ix-1] += 1
+	lnk_count[ix] += 1
+	lnk_count[ix-1] += 1
+	connect_edge(ix, ix+ARY_WIDTH)
 func unmake_h_link(ix):			# make_h_link() 処理を戻す
 	h_link[ix] = EMPTY
 	degree[ix] -= 1
 	degree[ix+1] -= 1
-	count[ix] -= 1
-	count[ix-ARY_WIDTH] -= 1
+	lnk_count[ix] -= 1
+	lnk_count[ix-ARY_WIDTH] -= 1
 func unmake_v_link(ix):			# make_v_link() 処理を戻す
 	v_link[ix] = EMPTY
 	degree[ix] -= 1
 	degree[ix+ARY_WIDTH] -= 1
-	count[ix] -= 1
-	count[ix-1] -= 1
+	lnk_count[ix] -= 1
+	lnk_count[ix-1] -= 1
 func make_h_unlink(ix):
 	h_link[ix] = UNLINKED
+	ul_count[ix] += 1
+	ul_count[ix-ARY_WIDTH] += 1
 func make_v_unlink(ix):
 	v_link[ix] = UNLINKED
+	ul_count[ix] += 1
+	ul_count[ix-1] += 1
+func unmake_h_unlink(ix):			# make_h_unlink() 処理を戻す
+	h_link[ix] = EMPTY
+	ul_count[ix] -= 1
+	ul_count[ix-ARY_WIDTH] -= 1
+func unmake_v_unlink(ix):			# make_v_unlink() 処理を戻す
+	v_link[ix] = EMPTY
+	ul_count[ix] -= 1
+	ul_count[ix-1] -= 1
+func connect_edge(ix1, ix2):
+	if mate[ix1] == ix1:			# ix1：未接続
+		if mate[ix2] == ix2:		# 両方端点→連結
+			mate[ix1] = ix2
+			mate[ix2] = ix1
+			n_end_pnt += 2
+		else:						# ix2 が接続済み
+			mate[mate[ix2]] = ix1
+			mate[ix1] = mate[ix2]
+			mate[ix2] = 0				# 中点
+	elif mate[ix1] != 0:			# ix1：接続済み
+		if mate[ix2] == ix2:		# ix2 が端点
+			mate[mate[ix1]] = ix2
+			mate[ix2] = mate[ix1]
+			mate[ix1] = 0
+		else:						# ix1, ix2 が接続済み
+			mate[mate[ix1]] = mate[ix2]
+			mate[mate[ix2]] = mate[ix1]
+			mate[ix1] = 0
+			mate[ix2] = 0
+			n_end_pnt -= 2
+#
+func print_mate():
+	print("n_end_pnt = %d, mate:" % n_end_pnt)
+	for y in range(N_VERT+1):
+		var txt = ""
+		for x in range(N_HORZ+1):
+			var ix = xyToIX(x, y)
+			txt += "%2d " % mate[ix]
+		print(txt)
+	print("\n")
 func print_degree():
 	print("vertex degree:")
 	for y in range(N_VERT+1):
@@ -137,11 +192,11 @@ func print_degree():
 	print("\n")
 func print_count():
 	print("linked edge count:")
-	for y in range(N_VERT+1):
+	for y in range(N_VERT):
 		var txt = ""
-		for x in range(N_HORZ+1):
+		for x in range(N_HORZ):
 			var ix = xyToIX(x, y)
-			txt += "%d " % count[ix]
+			txt += "%d " % lnk_count[ix]
 		print(txt)
 	print("\n")
 func print_board():
