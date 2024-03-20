@@ -22,10 +22,11 @@ const ANY = -1			# 手がかり数字無し
 const WALL = -2			# 壁
 
 var clue_num = []		# 手がかり数字
-var h_link = []			# 各格子点の右連結フラグ、1 for 連結、0 for 非連結
+var h_link = []			# 各格子点の右連結フラグ
 var v_link = []			# 各格子点の下連結フラグ
 var mate = []			# 連結先配列、端点以外は値: 0
 var degree = []			# 頂点次数
+var count = []			# セル周囲連結エッジ数
 var dir_order = [LINK_UP, LINK_DOWN, LINK_LEFT, LINK_RIGHT]
 var solved = false		# 解探索成功
 var finished = false	# 探索終了
@@ -61,6 +62,8 @@ func set_board_size(n):
 	for i in range(ARY_SIZE): mate[i] = i		# 非連結
 	degree.resize(ARY_SIZE)
 	degree.fill(0)
+	count.resize(ARY_SIZE)
+	count.fill(0)
 	ix99 = xyToIX(N_HORZ, N_VERT)
 	init_links()
 	assert( h_link[xyToIX(-1, 0)] == UNLINKED_DTM )
@@ -99,10 +102,14 @@ func make_h_link(ix):
 	h_link[ix] = LINKED
 	degree[ix] += 1
 	degree[ix+1] += 1
+	count[ix] += 1
+	count[ix-ARY_WIDTH] += 1
 func make_v_link(ix):
 	v_link[ix] = LINKED
 	degree[ix] += 1
 	degree[ix+ARY_WIDTH] += 1
+	count[ix] += 1
+	count[ix-1] += 1
 func print_degree():
 	print("vertex degree:")
 	for y in range(N_VERT+1):
@@ -110,6 +117,15 @@ func print_degree():
 		for x in range(N_HORZ+1):
 			var ix = xyToIX(x, y)
 			txt += "%d " % degree[ix]
+		print(txt)
+	print("\n")
+func print_count():
+	print("linked edge count:")
+	for y in range(N_VERT+1):
+		var txt = ""
+		for x in range(N_HORZ+1):
+			var ix = xyToIX(x, y)
+			txt += "%d " % count[ix]
 		print(txt)
 	print("\n")
 func print_board():

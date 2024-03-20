@@ -9,7 +9,7 @@
 0007 ● C 03/20            │ToDo│盤面サイズ変更可能に（3x3 ～ 7x7 ？）
 0008 ◎ C 03/20 03/20 0.001│ToDo│Board.print_degree()
 0009 ◎ C 03/20 03/20 0.001│ToDo│Board.make_h_link(ix), make_v_link(ix)
-0010 ● C 03/20            │ToDo│Board.count[] 追加
+0010 ◎ C 03/20 03/20 0.001│ToDo│Board.count[] 追加
 0011 ● C 03/20            │ToDo│
 0012 ● C 03/20            │ToDo│
 0013 ● C 03/20            │ToDo│

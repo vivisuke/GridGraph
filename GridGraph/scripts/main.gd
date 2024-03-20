@@ -19,8 +19,10 @@ func _ready():
 	set_board_size(5)
 	bd.make_h_link(xyToIX(0, 0))
 	bd.make_v_link(xyToIX(0, 0))
+	bd.make_h_link(xyToIX(1, 1))
 	bd.print_board()
 	bd.print_degree()
+	bd.print_count()
 	$Board/Grid.h_link = bd.h_link
 	$Board/Grid.v_link = bd.v_link
 	$Board/Grid.queue_redraw()
