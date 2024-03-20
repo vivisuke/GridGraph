@@ -95,6 +95,14 @@ func init_links():
 		h_link[ix2+y*ARY_WIDTH] = UNLINKED_DTM
 	assert( h_link[xyToIX(-1, 0)] == UNLINKED_DTM )
 	assert( v_link[xyToIX(0, -1)] == UNLINKED_DTM )
+func make_h_link(ix):
+	h_link[ix] = LINKED
+	degree[ix] += 1
+	degree[ix+1] += 1
+func make_v_link(ix):
+	v_link[ix] = LINKED
+	degree[ix] += 1
+	degree[ix+ARY_WIDTH] += 1
 func print_degree():
 	print("vertex degree:")
 	for y in range(N_VERT+1):

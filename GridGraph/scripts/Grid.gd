@@ -36,33 +36,33 @@ func xyToIX(x, y): return x + (y+1)*ARY_WIDTH
 
 func _draw():
 	# エッジ線・非連結 X 描画
-	#for y in range(N_VERT+1):
-	#	var py = y * CELL_WIDTH
-	#	for x in range(N_HORZ+1):
-	#		var px = x * CELL_WIDTH
-	#		var ix = xyToIX(x, y)
-	#		# 連結済み線
-	#		if h_link[ix] == LINKED_DTM:
-	#			draw_line(Vector2(px, py), Vector2(px+CELL_WIDTH, py) , LINK_DTM_COL, R*2)
-	#		elif h_link[ix] == LINKED:
-	#			draw_line(Vector2(px, py), Vector2(px+CELL_WIDTH, py) , LINK_COL, R*2)
-	#		if v_link[ix] == LINKED_DTM:
-	#			draw_line(Vector2(px, py), Vector2(px, py+CELL_WIDTH) , LINK_DTM_COL, R*2)
-	#		elif v_link[ix] == LINKED:
-	#			draw_line(Vector2(px, py), Vector2(px, py+CELL_WIDTH) , LINK_COL, R*2)
-	#		# 非連結状態 X
-	#		if x < N_HORZ && h_link[ix] == UNLINKED_DTM:
-	#			draw_line(Vector2(px+CWD2-XWD2, py-XWD2), Vector2(px+CWD2+XWD2, py+XWD2), LINK_DTM_COL, 3)
-	#			draw_line(Vector2(px+CWD2-XWD2, py+XWD2), Vector2(px+CWD2+XWD2, py-XWD2), LINK_DTM_COL, 3)
-	#		elif x < N_HORZ && h_link[ix] == UNLINKED:
-	#			draw_line(Vector2(px+CWD2-XWD2, py-XWD2), Vector2(px+CWD2+XWD2, py+XWD2), LINK_COL, 3)
-	#			draw_line(Vector2(px+CWD2-XWD2, py+XWD2), Vector2(px+CWD2+XWD2, py-XWD2), LINK_COL, 3)
-	#		if y < N_VERT && v_link[ix] == UNLINKED_DTM:
-	#			draw_line(Vector2(px-XWD2, py+CWD2-XWD2), Vector2(px+XWD2, py+CWD2+XWD2), LINK_DTM_COL, 3)
-	#			draw_line(Vector2(px-XWD2, py+CWD2+XWD2), Vector2(px+XWD2, py+CWD2-XWD2), LINK_DTM_COL, 3)
-	#		elif y < N_VERT && v_link[ix] == UNLINKED:
-	#			draw_line(Vector2(px-XWD2, py+CWD2-XWD2), Vector2(px+XWD2, py+CWD2+XWD2), LINK_COL, 3)
-	#			draw_line(Vector2(px-XWD2, py+CWD2+XWD2), Vector2(px+XWD2, py+CWD2-XWD2), LINK_COL, 3)
+	for y in range(N_VERT+1):
+		var py = y * CELL_WIDTH
+		for x in range(N_HORZ+1):
+			var px = x * CELL_WIDTH
+			var ix = xyToIX(x, y)
+			# 連結済み線
+			if h_link[ix] == LINKED_DTM:
+				draw_line(Vector2(px, py), Vector2(px+CELL_WIDTH, py) , LINK_DTM_COL, R*2)
+			elif h_link[ix] == LINKED:
+				draw_line(Vector2(px, py), Vector2(px+CELL_WIDTH, py) , LINK_COL, R*2)
+			if v_link[ix] == LINKED_DTM:
+				draw_line(Vector2(px, py), Vector2(px, py+CELL_WIDTH) , LINK_DTM_COL, R*2)
+			elif v_link[ix] == LINKED:
+				draw_line(Vector2(px, py), Vector2(px, py+CELL_WIDTH) , LINK_COL, R*2)
+			# 非連結状態 X
+			if x < N_HORZ && h_link[ix] == UNLINKED_DTM:
+				draw_line(Vector2(px+CWD2-XWD2, py-XWD2), Vector2(px+CWD2+XWD2, py+XWD2), LINK_DTM_COL, 3)
+				draw_line(Vector2(px+CWD2-XWD2, py+XWD2), Vector2(px+CWD2+XWD2, py-XWD2), LINK_DTM_COL, 3)
+			elif x < N_HORZ && h_link[ix] == UNLINKED:
+				draw_line(Vector2(px+CWD2-XWD2, py-XWD2), Vector2(px+CWD2+XWD2, py+XWD2), LINK_COL, 3)
+				draw_line(Vector2(px+CWD2-XWD2, py+XWD2), Vector2(px+CWD2+XWD2, py-XWD2), LINK_COL, 3)
+			if y < N_VERT && v_link[ix] == UNLINKED_DTM:
+				draw_line(Vector2(px-XWD2, py+CWD2-XWD2), Vector2(px+XWD2, py+CWD2+XWD2), LINK_DTM_COL, 3)
+				draw_line(Vector2(px-XWD2, py+CWD2+XWD2), Vector2(px+XWD2, py+CWD2-XWD2), LINK_DTM_COL, 3)
+			elif y < N_VERT && v_link[ix] == UNLINKED:
+				draw_line(Vector2(px-XWD2, py+CWD2-XWD2), Vector2(px+XWD2, py+CWD2+XWD2), LINK_COL, 3)
+				draw_line(Vector2(px-XWD2, py+CWD2+XWD2), Vector2(px+XWD2, py+CWD2-XWD2), LINK_COL, 3)
 	# 格子点描画
 	for y in range(N_VERT+1):
 		for x in range(N_HORZ+1):
