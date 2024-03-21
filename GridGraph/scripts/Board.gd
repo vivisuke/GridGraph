@@ -189,6 +189,7 @@ func connect_edge(ix1, ix2):
 func unconnect_edge(ix1, ix2):
 	var m1 = mate[ix1]
 	var m2 = mate[ix2]
+	if m1 == 0 && m2 == 0: n_end_pnt += 2
 	mate[ix2] = mate_stack.pop_back()
 	mate[ix1] = mate_stack.pop_back()
 	if m1 == 0:		# ix1：パス途中の場合
