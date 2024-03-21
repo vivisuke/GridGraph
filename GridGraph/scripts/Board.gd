@@ -219,6 +219,7 @@ func find_all_loop_SBS():
 				finished = true
 				return
 	var ix = xyToIX(sx, sy)
+	var uld = ul_degree[ix]
 	if ul_degree[ix] == 0:			# 上・左 両方非接続済みの場合
 		if fwd:
 			if h_link[ix] == EMPTY:

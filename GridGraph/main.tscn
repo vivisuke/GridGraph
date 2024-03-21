@@ -22,7 +22,7 @@ script = ExtResource("1_i8dcp")
 layout_mode = 0
 offset_right = 500.0
 offset_bottom = 50.0
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 26
 text = "GridGraph v0.001"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -42,6 +42,15 @@ offset_bottom = 460.0
 color = Color(1, 1, 1, 0)
 script = ExtResource("2_k0ihr")
 
+[node name="MessLabel" type="Label" parent="."]
+offset_left = 10.0
+offset_top = 600.0
+offset_right = 490.0
+offset_bottom = 640.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "message"
+
 [node name="HBC1" type="HBoxContainer" parent="."]
 offset_left = 10.0
 offset_top = 650.0
@@ -51,14 +60,5 @@ offset_bottom = 690.0
 [node name="Step1Button" type="Button" parent="HBC1"]
 layout_mode = 2
 text = "1 Step"
-
-[node name="MessLabel" type="Label" parent="."]
-offset_left = 10.0
-offset_top = 600.0
-offset_right = 490.0
-offset_bottom = 640.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 20
-text = "message"
 
 [connection signal="pressed" from="HBC1/Step1Button" to="." method="_on_step_1_button_pressed"]

@@ -91,5 +91,8 @@ func _on_step_1_button_pressed():
 	bd.print_count()
 	bd.print_mate()
 	$MessLabel.text = "is_loop" if bd.is_loop else ""
+	$MessLabel.text += (", n_end_pnt = %d" % bd.n_end_pnt)
+	$Board/Grid.sx = bd.sx
+	$Board/Grid.sy = bd.sy
 	$Board/Grid.queue_redraw()
 	pass # Replace with function body.
