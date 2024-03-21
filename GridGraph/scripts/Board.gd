@@ -32,6 +32,7 @@ var lnk_count = []		# セル周囲連結エッジ数
 var ul_count = []		# セル周囲非連結エッジ数
 var dir_order = [LINK_UP, LINK_DOWN, LINK_LEFT, LINK_RIGHT]
 var n_end_pnt = 0		# 端点数
+var is_loop = false
 var solved = false		# 解探索成功
 var finished = false	# 探索終了
 var n_solved = 0		# 発見解数
@@ -198,6 +199,7 @@ func unconnect_edge(ix1, ix2):
 func find_all_loop_SBS():
 	if finished: return
 	n_step += 1
+	is_loop = false
 	if fwd:		# 末端に向かって探索中
 		sx += 1
 		if sx > N_HORZ:
@@ -240,6 +242,7 @@ func find_all_loop_SBS():
 					make_v_unlink(ix)
 				if mate[ix] == 0 && mate[ix+1] == 0 && n_end_pnt == 0:	# 閉路
 					print("loop found.")
+					is_loop = true
 					sx += 1
 					fwd = false
 			elif v_link[ix] == EMPTY:
