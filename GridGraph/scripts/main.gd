@@ -16,7 +16,7 @@ func xyToIX(x, y): return x + (y+1)*ARY_WIDTH
 
 func _ready():
 	bd = CBoard.new()
-	if true:
+	if false:
 		set_board_size(5)
 		bd.make_h_link(xyToIX(0, 0))
 		bd.make_h_link(xyToIX(1, 0))
@@ -26,16 +26,8 @@ func _ready():
 		bd.print_board()
 		bd.print_mate()
 		#bd.unmake_h_link(xyToIX(0, 0))
-	if false:
+	if true:
 		set_board_size(3)
-		#bd.make_v_link(xyToIX(0, 0))
-		#bd.make_v_link(xyToIX(1, 0))
-		#bd.print_board()
-		#bd.print_degree()
-		#bd.print_count()
-		#bd.print_mate()
-		#bd.make_h_link(xyToIX(0, 0))
-		#bd.make_h_link(xyToIX(0, 1))
 	if false:
 		set_board_size(5)
 		bd.make_h_link(xyToIX(0, 0))
@@ -88,6 +80,9 @@ func set_board_size(n):
 func _process(delta):
 	pass
 
+func _input(event):
+	if event is InputEventKey && event.is_pressed():
+		_on_step_1_button_pressed()
 
 func _on_step_1_button_pressed():
 	bd.find_all_loop_SBS()

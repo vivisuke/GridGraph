@@ -27,6 +27,7 @@ var v_link = []			# 各格子点の下連結フラグ
 var mate = []			# 連結先配列、端点以外は値: 0
 var mate_stack = []		# リンク前値
 var degree = []			# 頂点次数
+var ul_degree = []		# 上・左方向頂点次数
 var lnk_count = []		# セル周囲連結エッジ数
 var ul_count = []		# セル周囲非連結エッジ数
 var dir_order = [LINK_UP, LINK_DOWN, LINK_LEFT, LINK_RIGHT]
@@ -65,6 +66,8 @@ func set_board_size(n):
 	for i in range(ARY_SIZE): mate[i] = i		# 非連結
 	degree.resize(ARY_SIZE)
 	degree.fill(0)
+	ul_degree.resize(ARY_SIZE)
+	ul_degree.fill(0)
 	lnk_count.resize(ARY_SIZE)
 	lnk_count.fill(0)
 	ul_count.resize(ARY_SIZE)
@@ -79,6 +82,7 @@ func clear_clue_nums():
 			clue_num[xyToIX(x, y)] = ANY
 func clear_edges():
 	n_end_pnt = 0
+	mate_stack.clear()
 	for y in range(N_VERT+1):
 		for x in range(N_HORZ):
 			h_link[xyToIX(x, y)] = EMPTY
@@ -86,6 +90,7 @@ func clear_edges():
 		for x in range(N_HORZ+1):
 			v_link[xyToIX(x, y)] = EMPTY
 	degree.fill(0)
+	ul_degree.fill(0)
 	lnk_count.fill(0)
 	ul_count.fill(0)
 	for i in range(mate.size()):
@@ -111,29 +116,33 @@ func init_links():
 	assert( v_link[xyToIX(0, -1)] == UNLINKED_DTM )
 func make_h_link(ix):
 	h_link[ix] = LINKED
-	degree[ix] += 1
-	degree[ix+1] += 1
+	#degree[ix] += 1
+	#degree[ix+1] += 1
+	ul_degree[ix+1] += 1
 	lnk_count[ix] += 1
 	lnk_count[ix-ARY_WIDTH] += 1
 	connect_edge(ix, ix+1)
 func make_v_link(ix):
 	v_link[ix] = LINKED
-	degree[ix] += 1
-	degree[ix+ARY_WIDTH] += 1
+	#degree[ix] += 1
+	#degree[ix+ARY_WIDTH] += 1
+	ul_degree[ix+ARY_WIDTH] += 1
 	lnk_count[ix] += 1
 	lnk_count[ix-1] += 1
 	connect_edge(ix, ix+ARY_WIDTH)
 func unmake_h_link(ix):			# make_h_link() 処理を戻す
 	h_link[ix] = EMPTY
-	degree[ix] -= 1
-	degree[ix+1] -= 1
+	#degree[ix] -= 1
+	#degree[ix+1] -= 1
+	ul_degree[ix+1] -= 1
 	lnk_count[ix] -= 1
 	lnk_count[ix-ARY_WIDTH] -= 1
 	unconnect_edge(ix, ix+1)
 func unmake_v_link(ix):			# make_v_link() 処理を戻す
 	v_link[ix] = EMPTY
-	degree[ix] -= 1
-	degree[ix+ARY_WIDTH] -= 1
+	#degree[ix] -= 1
+	#degree[ix+ARY_WIDTH] -= 1
+	ul_degree[ix+ARY_WIDTH] -= 1
 	lnk_count[ix] -= 1
 	lnk_count[ix-1] -= 1
 	unconnect_edge(ix, ix+ARY_WIDTH)
@@ -208,7 +217,7 @@ func find_all_loop_SBS():
 				finished = true
 				return
 	var ix = xyToIX(sx, sy)
-	if degree[ix] == 0:			# 上・左 両方非接続済みの場合
+	if ul_degree[ix] == 0:			# 上・左 両方非接続済みの場合
 		if fwd:
 			if h_link[ix] == EMPTY:
 				if v_link[ix] == EMPTY:
@@ -223,13 +232,14 @@ func find_all_loop_SBS():
 					pass
 		else:	# バックトラッキング中
 			pass
-	elif degree[ix] == 1:			# 上・左 片方のみ接続済みの場合
+	elif ul_degree[ix] == 1:			# 上・左 片方のみ接続済みの場合
 		if fwd:
 			if h_link[ix] == EMPTY:
 				make_h_link(ix)
 				if v_link[ix] == EMPTY:		# 下端でない場合
 					make_v_unlink(ix)
-				if mate[ix] == 0 && mate[ix+1] == 0 && n_end_pnt == 0:
+				if mate[ix] == 0 && mate[ix+1] == 0 && n_end_pnt == 0:	# 閉路
+					print("loop found.")
 					sx += 1
 					fwd = false
 			elif v_link[ix] == EMPTY:
@@ -239,7 +249,7 @@ func find_all_loop_SBS():
 		else:
 			if h_link[ix] == LINKED:
 				unmake_h_link(ix)
-				if v_link[ix] == EMPTY:
+				if v_link[ix] != UNLINKED_DTM:
 					make_h_unlink(ix)
 					make_v_link(ix)
 					fwd = true
@@ -248,7 +258,7 @@ func find_all_loop_SBS():
 					#fwd = false
 			elif v_link[ix] == LINKED:
 				make_v_unlink(ix)
-	elif degree[ix] == 2:			# 上・左 両方接続済みの場合
+	elif ul_degree[ix] == 2:			# 上・左 両方接続済みの場合
 		if fwd:
 			make_h_unlink(ix)
 			make_v_unlink(ix)
@@ -266,12 +276,12 @@ func print_mate():
 		print(txt)
 	print("\n")
 func print_degree():
-	print("vertex degree:")
+	print("vertex ul_degree:")
 	for y in range(N_VERT+1):
 		var txt = ""
 		for x in range(N_HORZ+1):
 			var ix = xyToIX(x, y)
-			txt += "%d " % degree[ix]
+			txt += "%d " % ul_degree[ix]
 		print(txt)
 	print("\n")
 func print_count():
