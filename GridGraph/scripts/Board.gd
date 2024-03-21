@@ -235,7 +235,13 @@ func find_all_loop_SBS():
 				else:
 					pass
 		else:	# バックトラッキング中
-			pass
+			if h_link[ix] != UNLINKED && v_link[ix] != UNLINKED:
+				if h_link[ix] != UNLINKED_DTM: h_link[ix] = UNLINKED
+				if v_link[ix] != UNLINKED_DTM: v_link[ix] = UNLINKED
+				fwd = true
+			else:
+				if h_link[ix] != UNLINKED_DTM: h_link[ix] = EMPTY
+				if v_link[ix] != UNLINKED_DTM: v_link[ix] = EMPTY
 	elif ul_degree[ix] == 1:			# 上・左 片方のみ接続済みの場合
 		if fwd:
 			if h_link[ix] == EMPTY:
