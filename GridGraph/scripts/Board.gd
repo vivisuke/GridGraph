@@ -197,6 +197,13 @@ func unconnect_edge(ix1, ix2):
 	if m2 == 0:		# ix2：パス途中の場合
 		mate[mate[ix2]] = ix2
 #
+func init_find_all_loop():
+	finished = false
+	n_step = 0
+	fwd = true
+	sx = -1
+	sy = 0
+	clear_edges()
 func find_all_loop_SBS():
 	if finished: return
 	n_step += 1

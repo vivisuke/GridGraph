@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://chjo4wwmyfkgb"]
+[gd_scene load_steps=6 format=3 uid="uid://chjo4wwmyfkgb"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_78r36"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_i8dcp"]
 [ext_resource type="Script" path="res://scripts/Grid.gd" id="2_k0ihr"]
+[ext_resource type="Texture2D" uid="uid://uputahnqibq5" path="res://images/loop_black.png" id="4_jguw1"]
+[ext_resource type="Texture2D" uid="uid://da1ew1c82bcjl" path="res://images/loop_white.png" id="5_fcspy"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_78r36")
@@ -56,9 +58,16 @@ offset_left = 10.0
 offset_top = 650.0
 offset_right = 490.0
 offset_bottom = 690.0
+theme_override_constants/separation = 10
+
+[node name="RestartButton" type="TextureButton" parent="HBC1"]
+layout_mode = 2
+texture_normal = ExtResource("4_jguw1")
+texture_pressed = ExtResource("5_fcspy")
 
 [node name="Step1Button" type="Button" parent="HBC1"]
 layout_mode = 2
 text = "1 Step"
 
+[connection signal="pressed" from="HBC1/RestartButton" to="." method="_on_restart_button_pressed"]
 [connection signal="pressed" from="HBC1/Step1Button" to="." method="_on_step_1_button_pressed"]

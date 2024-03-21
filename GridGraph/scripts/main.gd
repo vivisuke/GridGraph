@@ -27,7 +27,7 @@ func _ready():
 		bd.print_mate()
 		#bd.unmake_h_link(xyToIX(0, 0))
 	if true:
-		set_board_size(3)
+		set_board_size(2)
 	if false:
 		set_board_size(5)
 		bd.make_h_link(xyToIX(0, 0))
@@ -92,6 +92,14 @@ func _on_step_1_button_pressed():
 	bd.print_mate()
 	$MessLabel.text = "is_loop" if bd.is_loop else ""
 	$MessLabel.text += (", n_end_pnt = %d" % bd.n_end_pnt)
+	$Board/Grid.sx = bd.sx
+	$Board/Grid.sy = bd.sy
+	$Board/Grid.queue_redraw()
+	pass # Replace with function body.
+
+
+func _on_restart_button_pressed():
+	bd.init_find_all_loop()
 	$Board/Grid.sx = bd.sx
 	$Board/Grid.sy = bd.sy
 	$Board/Grid.queue_redraw()
