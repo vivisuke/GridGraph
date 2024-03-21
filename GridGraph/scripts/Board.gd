@@ -242,9 +242,10 @@ func find_all_loop_SBS():
 				make_h_link(ix)
 				if v_link[ix] == EMPTY:		# 下端でない場合
 					make_v_unlink(ix)
-				if mate[ix] == 0 && mate[ix+1] == 0 && n_end_pnt == 0:	# 閉路
-					print("loop found.")
-					is_loop = true
+				if mate[ix] == 0 && mate[ix+1] == 0:
+					if n_end_pnt == 0:	# 閉路
+						print("loop found.")
+						is_loop = true
 					sx += 1
 					fwd = false
 			elif v_link[ix] == EMPTY:
