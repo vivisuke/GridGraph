@@ -79,6 +79,9 @@ func _ready():
 func set_board_size(n):
 	N_HORZ = n
 	N_VERT = n
+	ARY_WIDTH = N_HORZ + 1
+	ARY_HEIGHT = N_VERT + 2
+	ARY_SIZE = ARY_WIDTH * ARY_HEIGHT
 	CELL_WIDTH = width / N_HORZ
 	CWD2 = CELL_WIDTH / 2
 	queue_redraw()
