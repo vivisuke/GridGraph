@@ -32,3 +32,15 @@ offset_right = 460.0
 offset_bottom = 460.0
 color = Color(1, 1, 1, 0)
 script = ExtResource("2_k0ihr")
+
+[node name="HBC1" type="HBoxContainer" parent="."]
+offset_left = 10.0
+offset_top = 650.0
+offset_right = 490.0
+offset_bottom = 690.0
+
+[node name="Step1Button" type="Button" parent="HBC1"]
+layout_mode = 2
+text = "1 Step"
+
+[connection signal="pressed" from="HBC1/Step1Button" to="." method="_on_step_1_button_pressed"]
