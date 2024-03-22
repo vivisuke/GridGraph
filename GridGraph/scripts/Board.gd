@@ -216,7 +216,7 @@ func find_all_loop_SBS():
 			if sy > N_VERT:
 				fwd = false
 				sy -= 1
-				sx = N_HORZ + 1
+				sx = N_HORZ
 	if !fwd:		# バックトラッキング中
 		sx -= 1
 		if sx < 0:
@@ -275,8 +275,11 @@ func find_all_loop_SBS():
 				else:
 					pass
 					#fwd = false
-			elif v_link[ix] == LINKED:
-				make_v_unlink(ix)
+			else:
+				if h_link[ix] == UNLINKED:
+					unmake_h_unlink(ix)
+				if v_link[ix] == LINKED:
+					unmake_v_link(ix)
 	elif ul_degree[ix] == 2:			# 上・左 両方接続済みの場合
 		if fwd:
 			make_h_unlink(ix)
