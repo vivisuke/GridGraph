@@ -77,6 +77,17 @@ func set_board_size(n):
 	init_links()
 	assert( h_link[xyToIX(-1, 0)] == UNLINKED_DTM )
 	assert( v_link[xyToIX(0, -1)] == UNLINKED_DTM )
+func check_wall():		# 壁部分が壊れていないかチェック
+	var ix1 = xyToIX(0, -1)
+	var ix2 = xyToIX(0, N_VERT)
+	for x in range(N_HORZ+1):
+		assert( v_link[ix1+x] == UNLINKED_DTM )
+		assert( v_link[ix2+x] == UNLINKED_DTM )
+	ix1 = xyToIX(-1, 0)
+	ix2 = xyToIX(N_HORZ, 0)
+	for y in range(N_HORZ+1):
+		assert( h_link[ix1+y*ARY_WIDTH] == UNLINKED_DTM )
+		assert( h_link[ix2+y*ARY_WIDTH] == UNLINKED_DTM )
 func clear_clue_nums():
 	for y in range(N_VERT):
 		for x in range(N_HORZ):
@@ -206,6 +217,7 @@ func init_find_all_loop():
 	clear_edges()
 func find_all_loop_SBS():
 	if finished: return
+	check_wall()
 	n_step += 1
 	is_loop = false
 	if fwd:		# 末端に向かって探索中
@@ -241,14 +253,18 @@ func find_all_loop_SBS():
 					make_v_unlink(ix)
 				else:
 					pass
+			check_wall()
 		else:	# バックトラッキング中
-			if h_link[ix] != UNLINKED && v_link[ix] != UNLINKED:
-				if h_link[ix] != UNLINKED_DTM: h_link[ix] = UNLINKED
-				if v_link[ix] != UNLINKED_DTM: v_link[ix] = UNLINKED
+			if h_link[ix] == LINKED && v_link[ix] == LINKED:
+				unmake_h_link(ix)
+				make_h_unlink(ix)
+				unmake_v_link(ix)
+				make_v_unlink(ix)
 				fwd = true
 			else:
-				if h_link[ix] != UNLINKED_DTM: h_link[ix] = EMPTY
-				if v_link[ix] != UNLINKED_DTM: v_link[ix] = EMPTY
+				if h_link[ix] == UNLINKED: unmake_h_unlink(ix)
+				if v_link[ix] == UNLINKED: unmake_v_unlink(ix)
+			check_wall()
 	elif ul_degree[ix] == 1:			# 上・左 片方のみ接続済みの場合
 		if fwd:
 			if h_link[ix] == EMPTY:
@@ -265,6 +281,7 @@ func find_all_loop_SBS():
 				make_v_link(ix)
 			else:
 				fwd = false
+			check_wall()
 		else:
 			if h_link[ix] == LINKED:
 				unmake_h_link(ix)
@@ -280,13 +297,16 @@ func find_all_loop_SBS():
 					unmake_h_unlink(ix)
 				if v_link[ix] == LINKED:
 					unmake_v_link(ix)
+			check_wall()
 	elif ul_degree[ix] == 2:			# 上・左 両方接続済みの場合
 		if fwd:
-			make_h_unlink(ix)
-			make_v_unlink(ix)
+			if h_link[ix] == EMPTY: make_h_unlink(ix)
+			if v_link[ix] == EMPTY: make_v_unlink(ix)
+			check_wall()
 		else:
-			unmake_h_unlink(ix)
-			unmake_v_unlink(ix)
+			if h_link[ix] == UNLINKED: unmake_h_unlink(ix)
+			if v_link[ix] == UNLINKED: unmake_v_unlink(ix)
+			check_wall()
 #
 func print_mate():
 	print("n_end_pnt = %d, mate:" % n_end_pnt)

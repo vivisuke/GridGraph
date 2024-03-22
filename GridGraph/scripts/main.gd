@@ -90,6 +90,7 @@ func _on_step_1_button_pressed():
 	bd.print_degree()
 	bd.print_count()
 	bd.print_mate()
+	$NStepLabel.text = "#%d" % bd.n_step
 	$MessLabel.text = "is_loop" if bd.is_loop else ""
 	$MessLabel.text += (", n_end_pnt = %d" % bd.n_end_pnt)
 	$Board/Grid.sx = bd.sx
@@ -100,6 +101,7 @@ func _on_step_1_button_pressed():
 
 func _on_restart_button_pressed():
 	bd.init_find_all_loop()
+	$NStepLabel.text = "#%d" % bd.n_step
 	$Board/Grid.sx = bd.sx
 	$Board/Grid.sy = bd.sy
 	$Board/Grid.queue_redraw()
