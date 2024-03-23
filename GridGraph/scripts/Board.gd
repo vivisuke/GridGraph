@@ -35,6 +35,7 @@ var n_end_pnt = 0		# 端点数
 var is_loop = false
 var solved = false		# 解探索成功
 var finished = false	# 探索終了
+var n_looped = 0		# 発見ループ数
 var n_solved = 0		# 発見解数
 var n_step = 0
 var fwd = true
@@ -213,6 +214,7 @@ func unconnect_edge(ix1, ix2):
 #
 func init_find_all_loop():
 	finished = false
+	n_looped = 0
 	n_step = 0
 	fwd = true
 	sx = -1
@@ -278,6 +280,7 @@ func find_all_loop_SBS():
 					if n_end_pnt == 0:	# 閉路
 						print("loop found.")
 						is_loop = true
+						n_looped += 1
 					sx += 1
 					fwd = false
 			elif v_link[ix] == EMPTY:

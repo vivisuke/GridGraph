@@ -91,8 +91,8 @@ func _on_step_1_button_pressed():
 	bd.print_count()
 	bd.print_mate()
 	$NStepLabel.text = "#%d" % bd.n_step
-	$MessLabel.text = "is_loop" if bd.is_loop else ""
-	$MessLabel.text += (", n_end_pnt = %d" % bd.n_end_pnt)
+	$MessLabel.text = ("#%d loop, "%bd.n_looped) if bd.is_loop else ""
+	$MessLabel.text += ("n_end_pnt = %d" % bd.n_end_pnt)
 	$MessLabel.text += (", fwd = %d" % (1 if bd.fwd else 0))
 	$Board/Grid.sx = bd.sx
 	$Board/Grid.sy = bd.sy
