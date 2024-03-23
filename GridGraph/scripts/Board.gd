@@ -222,7 +222,7 @@ func init_find_all_loop():
 	clear_edges()
 func find_all_loop_SBS():
 	if finished: return
-	check_wall()
+	#check_wall()
 	n_step += 1
 	is_loop = false
 	if fwd:		# 末端に向かって探索中
@@ -258,7 +258,7 @@ func find_all_loop_SBS():
 					make_v_unlink(ix)
 				else:
 					pass
-			check_wall()
+			#check_wall()
 		else:	# バックトラッキング中
 			if h_link[ix] == LINKED && v_link[ix] == LINKED:
 				unmake_v_link(ix)
@@ -269,16 +269,15 @@ func find_all_loop_SBS():
 			else:
 				if h_link[ix] == UNLINKED: unmake_h_unlink(ix)
 				if v_link[ix] == UNLINKED: unmake_v_unlink(ix)
-			check_wall()
+			#check_wall()
 	elif ul_degree[ix] == 1:			# 上・左 片方のみ接続済みの場合
 		if fwd:
 			if h_link[ix] == EMPTY:
-				var m0 = mate[ix]
-				#var m1 = mate[ix+1]
+			
 				make_h_link(ix)
 				if v_link[ix] == EMPTY:		# 下端でない場合
 					make_v_unlink(ix)
-				if mate[ix] == 0 && mate[ix+1] == 0 && m0 == ix+1:
+				if mate[ix] == 0 && mate[ix+1] == 0:
 					if n_end_pnt == 0:	# 閉路
 						print("loop found.")
 						is_loop = true
@@ -289,7 +288,7 @@ func find_all_loop_SBS():
 				make_v_link(ix)
 			else:
 				fwd = false
-			check_wall()
+			#check_wall()
 		else:
 			if h_link[ix] == LINKED:
 				unmake_h_link(ix)
@@ -305,16 +304,16 @@ func find_all_loop_SBS():
 					unmake_h_unlink(ix)
 				if v_link[ix] == LINKED:
 					unmake_v_link(ix)
-			check_wall()
+			#check_wall()
 	elif ul_degree[ix] == 2:			# 上・左 両方接続済みの場合
 		if fwd:
 			if h_link[ix] == EMPTY: make_h_unlink(ix)
 			if v_link[ix] == EMPTY: make_v_unlink(ix)
-			check_wall()
+			#check_wall()
 		else:
 			if h_link[ix] == UNLINKED: unmake_h_unlink(ix)
 			if v_link[ix] == UNLINKED: unmake_v_unlink(ix)
-			check_wall()
+			#check_wall()
 #
 func print_mate():
 	print("n_end_pnt = %d, mate:" % n_end_pnt)

@@ -88,5 +88,25 @@ texture_pressed = ExtResource("5_fcspy")
 layout_mode = 2
 text = "1 Step"
 
+[node name="Step10Button" type="Button" parent="HBC1"]
+layout_mode = 2
+text = "10 Step"
+
+[node name="Step100Button" type="Button" parent="HBC1"]
+layout_mode = 2
+text = "100 Step"
+
+[node name="Step1000Button" type="Button" parent="HBC1"]
+layout_mode = 2
+text = "1000 Step"
+
+[node name="Step10000Button" type="Button" parent="HBC1"]
+layout_mode = 2
+text = "100000 Step"
+
 [connection signal="pressed" from="HBC1/RestartButton" to="." method="_on_restart_button_pressed"]
 [connection signal="pressed" from="HBC1/Step1Button" to="." method="_on_step_1_button_pressed"]
+[connection signal="pressed" from="HBC1/Step10Button" to="." method="_on_step_10_button_pressed"]
+[connection signal="pressed" from="HBC1/Step100Button" to="." method="_on_step_100_button_pressed"]
+[connection signal="pressed" from="HBC1/Step1000Button" to="." method="_on_step_1000_button_pressed"]
+[connection signal="pressed" from="HBC1/Step10000Button" to="." method="_on_step_10000_button_pressed"]

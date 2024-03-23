@@ -81,14 +81,19 @@ func _process(delta):
 	pass
 
 func _input(event):
-	if event is InputEventKey && event.is_pressed():
-		_on_step_1_button_pressed()
+	#if event is InputEventKey && event.is_pressed():
+	#	_on_step_1_button_pressed()
+	pass
 
-func _on_step_1_button_pressed():
-	bd.find_all_loop_SBS()
+func do_step(n):
+	var start = Time.get_ticks_msec()
+	for i in range(n):
+		bd.find_all_loop_SBS()
+		if bd.finished: break
+	var end = Time.get_ticks_msec()
 	bd.print_board()
 	bd.print_degree()
-	bd.print_count()
+	#bd.print_count()
 	bd.print_mate()
 	$NStepLabel.text = "#%d" % bd.n_step
 	$NLoopLabel.text = "#Loop: %d" % bd.n_looped
@@ -98,8 +103,17 @@ func _on_step_1_button_pressed():
 	$Board/Grid.sx = bd.sx
 	$Board/Grid.sy = bd.sy
 	$Board/Grid.queue_redraw()
-	pass # Replace with function body.
-
+	print("dur = %d msec" % (end - start))
+func _on_step_1_button_pressed():
+	do_step(1)
+func _on_step_10_button_pressed():
+	do_step(10)
+func _on_step_100_button_pressed():
+	do_step(100)
+func _on_step_1000_button_pressed():
+	do_step(1000)
+func _on_step_10000_button_pressed():
+	do_step(100000)
 
 func _on_restart_button_pressed():
 	bd.init_find_all_loop()
@@ -109,3 +123,7 @@ func _on_restart_button_pressed():
 	$Board/Grid.sy = bd.sy
 	$Board/Grid.queue_redraw()
 	pass # Replace with function body.
+
+
+
+
