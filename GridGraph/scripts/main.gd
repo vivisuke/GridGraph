@@ -16,6 +16,8 @@ func xyToIX(x, y): return x + (y+1)*ARY_WIDTH
 
 func _ready():
 	bd = CBoard.new()
+	if true:
+		set_board_size(4)
 	if false:
 		set_board_size(5)
 		bd.make_h_link(xyToIX(0, 0))
@@ -26,8 +28,6 @@ func _ready():
 		bd.print_board()
 		bd.print_mate()
 		#bd.unmake_h_link(xyToIX(0, 0))
-	if true:
-		set_board_size(2)
 	if false:
 		set_board_size(5)
 		bd.make_h_link(xyToIX(0, 0))
@@ -91,6 +91,7 @@ func _on_step_1_button_pressed():
 	bd.print_count()
 	bd.print_mate()
 	$NStepLabel.text = "#%d" % bd.n_step
+	$NLoopLabel.text = "#Loop: %d" % bd.n_looped
 	$MessLabel.text = ("#%d loop, "%bd.n_looped) if bd.is_loop else ""
 	$MessLabel.text += ("n_end_pnt = %d" % bd.n_end_pnt)
 	$MessLabel.text += (", fwd = %d" % (1 if bd.fwd else 0))
@@ -103,6 +104,7 @@ func _on_step_1_button_pressed():
 func _on_restart_button_pressed():
 	bd.init_find_all_loop()
 	$NStepLabel.text = "#%d" % bd.n_step
+	$NLoopLabel.text = "#Loop: %d" % bd.n_looped
 	$Board/Grid.sx = bd.sx
 	$Board/Grid.sy = bd.sy
 	$Board/Grid.queue_redraw()

@@ -273,10 +273,12 @@ func find_all_loop_SBS():
 	elif ul_degree[ix] == 1:			# 上・左 片方のみ接続済みの場合
 		if fwd:
 			if h_link[ix] == EMPTY:
+				var m0 = mate[ix]
+				#var m1 = mate[ix+1]
 				make_h_link(ix)
 				if v_link[ix] == EMPTY:		# 下端でない場合
 					make_v_unlink(ix)
-				if mate[ix] == 0 && mate[ix+1] == 0:
+				if mate[ix] == 0 && mate[ix+1] == 0 && m0 == ix+1:
 					if n_end_pnt == 0:	# 閉路
 						print("loop found.")
 						is_loop = true
