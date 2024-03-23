@@ -200,7 +200,10 @@ func connect_edge(ix1, ix2):
 func unconnect_edge(ix1, ix2):
 	var m1 = mate[ix1]
 	var m2 = mate[ix2]
-	if m1 == 0 && m2 == 0: n_end_pnt += 2
+	if m1 == 0 && m2 == 0:				# 経路途中の場合
+		n_end_pnt += 2
+	elif m1 == ix2 && m2 == ix1:		# 端点どうしの場合
+		n_end_pnt -= 2
 	mate[ix2] = mate_stack.pop_back()
 	mate[ix1] = mate_stack.pop_back()
 	if m1 == 0:		# ix1：パス途中の場合
@@ -256,9 +259,9 @@ func find_all_loop_SBS():
 			check_wall()
 		else:	# バックトラッキング中
 			if h_link[ix] == LINKED && v_link[ix] == LINKED:
+				unmake_v_link(ix)
 				unmake_h_link(ix)
 				make_h_unlink(ix)
-				unmake_v_link(ix)
 				make_v_unlink(ix)
 				fwd = true
 			else:
