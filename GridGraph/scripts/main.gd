@@ -45,6 +45,12 @@ func _ready():
 		assert( bd.can_move_edge_down(xyToIX(1, 0)) )
 		assert( !bd.can_move_edge_down(xyToIX(0, 1)) )
 		assert( bd.can_move_edge_down(xyToIX(0, 2)) )
+		assert( bd.can_move_edge_left(xyToIX(1, 0)) )
+		assert( !bd.can_move_edge_left(xyToIX(0, 1)) )
+		assert( bd.can_move_edge_left(xyToIX(3, 0)) )
+		assert( !bd.can_move_edge_right(xyToIX(0, 0)) )
+		assert( bd.can_move_edge_right(xyToIX(1, 0)) )
+		assert( bd.can_move_edge_right(xyToIX(0, 1)) )
 	if false:
 		set_board_size(4)
 	if false:
