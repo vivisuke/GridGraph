@@ -8,6 +8,7 @@ var ARY_WIDTH
 var ARY_HEIGHT
 var ARY_SIZE
 var bd
+var mv_lst
 
 var CBoard = preload("res://scripts/Board.gd")
 
@@ -15,9 +16,21 @@ func xyToIX(x, y): return x + (y+1)*ARY_WIDTH
 
 
 func _ready():
-	seed(0)
+	#seed(0)
 	bd = CBoard.new()
 	if true:
+		set_board_size(4)
+		bd.make_h_link(xyToIX(1,2))
+		bd.make_v_link(xyToIX(1,2))
+		bd.make_h_link(xyToIX(1,3))
+		bd.make_v_link(xyToIX(2,2))
+		bd.print_board()
+		bd.print_degree()
+		bd.print_count()
+		mv_lst = bd.list_movable_edges()
+		print_dir_ix(mv_lst)
+		#print(lst)
+	if false:
 		set_board_size(4)
 		bd.make_h_link(xyToIX(0,0))
 		bd.make_v_link(xyToIX(0,0))
@@ -116,10 +129,46 @@ func _process(delta):
 	pass
 
 func _input(event):
-	#if event is InputEventKey && event.is_pressed():
+	if event is InputEventKey && event.is_pressed():
+		print(event.as_text())
+		if event.as_text() == "Space":
+			#print("S")
+			move_edge_random()
 	#	_on_step_1_button_pressed()
 	pass
-
+func print_dir_ix(lst):
+	var txt = ""
+	for i in range(lst.size()):
+		var ix = lst[i] / 4
+		txt += "%d " % ix
+		var dir = lst[i] % 4
+		if dir == Board.MOVE_UP: txt += "UP, "
+		elif dir == Board.MOVE_LEFT: txt += "LEFT, "
+		elif dir == Board.MOVE_RIGHT: txt += "RIGHT, "
+		elif dir == Board.MOVE_DOWN: txt += "DOWN, "
+		#txt += "%d %d, " % [dir, ix]
+	print(txt)
+func move_edge_random():
+	bd.print_board()
+	if mv_lst.is_empty(): return
+	var i = 0
+	if mv_lst.size() > 1:
+		i = randi() % mv_lst.size()
+	var dir = mv_lst[i] % 4
+	var ix = mv_lst[i] / 4
+	if dir == Board.MOVE_UP:
+		bd.move_edge_up(ix)
+	elif dir == Board.MOVE_LEFT:
+		bd.move_edge_left(ix)
+	elif dir == Board.MOVE_RIGHT:
+		bd.move_edge_right(ix)
+	elif dir == Board.MOVE_DOWN:
+		bd.move_edge_down(ix)
+	$Board/Grid.queue_redraw()
+	bd.print_degree()
+	bd.print_count()
+	mv_lst = bd.list_movable_edges()
+	print_dir_ix(mv_lst)
 func do_step(n, find_loop=false):
 	var start = Time.get_ticks_msec()
 	for i in range(n):

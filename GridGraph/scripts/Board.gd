@@ -2,6 +2,10 @@ class_name Board
 
 extends Node
 
+enum {
+	MOVE_UP = 0, MOVE_LEFT, MOVE_RIGHT, MOVE_DOWN,
+}
+
 const LINK_UP = 1
 const LINK_LEFT = 2
 const LINK_RIGHT = 4
@@ -473,6 +477,16 @@ func move_edge_right(ix):	# 垂直エッジを右に移動
 	rev_h_link(ix)
 	rev_h_link(ix+ARY_WIDTH)
 	make_v_link(ix+1)
+func list_movable_edges() -> Array:
+	var lst = []
+	for y in range(N_VERT):
+		for x in range(N_HORZ):
+			var ix = xyToIX(x, y)
+			if can_move_edge_up(ix): lst.push_back(ix*4 + MOVE_UP)
+			if can_move_edge_left(ix): lst.push_back(ix*4 + MOVE_LEFT)
+			if can_move_edge_right(ix): lst.push_back(ix*4 + MOVE_RIGHT)
+			if can_move_edge_down(ix): lst.push_back(ix*4 + MOVE_DOWN)
+	return lst
 #
 func print_mate():
 	print("n_end_pnt = %d, mate:" % n_end_pnt)
