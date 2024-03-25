@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://chjo4wwmyfkgb"]
+[gd_scene load_steps=8 format=3 uid="uid://chjo4wwmyfkgb"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_78r36"]
 [ext_resource type="Script" path="res://scripts/TitleBar.gd" id="1_i8dcp"]
 [ext_resource type="Script" path="res://scripts/Grid.gd" id="2_k0ihr"]
 [ext_resource type="Texture2D" uid="uid://uputahnqibq5" path="res://images/loop_black.png" id="4_jguw1"]
 [ext_resource type="Texture2D" uid="uid://da1ew1c82bcjl" path="res://images/loop_white.png" id="5_fcspy"]
+[ext_resource type="Texture2D" uid="uid://dtdfpu6bqcu61" path="res://images/skip_next_black.png" id="6_haa34"]
+[ext_resource type="Texture2D" uid="uid://cd73evrfdbxfb" path="res://images/skip_next_white.png" id="7_ntrwh"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_78r36")
@@ -84,29 +86,42 @@ layout_mode = 2
 texture_normal = ExtResource("4_jguw1")
 texture_pressed = ExtResource("5_fcspy")
 
-[node name="Step1Button" type="Button" parent="HBC1"]
+[node name="NextButton" type="TextureButton" parent="HBC1"]
+layout_mode = 2
+texture_normal = ExtResource("6_haa34")
+texture_pressed = ExtResource("7_ntrwh")
+
+[node name="HBC2" type="HBoxContainer" parent="."]
+offset_left = 10.0
+offset_top = 720.0
+offset_right = 490.0
+offset_bottom = 768.0
+theme_override_constants/separation = 10
+
+[node name="Step1Button" type="Button" parent="HBC2"]
 layout_mode = 2
 text = "1 Step"
 
-[node name="Step10Button" type="Button" parent="HBC1"]
+[node name="Step10Button" type="Button" parent="HBC2"]
 layout_mode = 2
 text = "10 Step"
 
-[node name="Step100Button" type="Button" parent="HBC1"]
+[node name="Step100Button" type="Button" parent="HBC2"]
 layout_mode = 2
 text = "100 Step"
 
-[node name="Step1000Button" type="Button" parent="HBC1"]
+[node name="Step1000Button" type="Button" parent="HBC2"]
 layout_mode = 2
 text = "1000 Step"
 
-[node name="Step10000Button" type="Button" parent="HBC1"]
+[node name="Step10000Button" type="Button" parent="HBC2"]
 layout_mode = 2
 text = "100000 Step"
 
 [connection signal="pressed" from="HBC1/RestartButton" to="." method="_on_restart_button_pressed"]
-[connection signal="pressed" from="HBC1/Step1Button" to="." method="_on_step_1_button_pressed"]
-[connection signal="pressed" from="HBC1/Step10Button" to="." method="_on_step_10_button_pressed"]
-[connection signal="pressed" from="HBC1/Step100Button" to="." method="_on_step_100_button_pressed"]
-[connection signal="pressed" from="HBC1/Step1000Button" to="." method="_on_step_1000_button_pressed"]
-[connection signal="pressed" from="HBC1/Step10000Button" to="." method="_on_step_10000_button_pressed"]
+[connection signal="pressed" from="HBC1/NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="pressed" from="HBC2/Step1Button" to="." method="_on_step_1_button_pressed"]
+[connection signal="pressed" from="HBC2/Step10Button" to="." method="_on_step_10_button_pressed"]
+[connection signal="pressed" from="HBC2/Step100Button" to="." method="_on_step_100_button_pressed"]
+[connection signal="pressed" from="HBC2/Step1000Button" to="." method="_on_step_1000_button_pressed"]
+[connection signal="pressed" from="HBC2/Step10000Button" to="." method="_on_step_10000_button_pressed"]

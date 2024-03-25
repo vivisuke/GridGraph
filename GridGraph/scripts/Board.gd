@@ -127,7 +127,7 @@ func init_links():
 		h_link[ix2+y*ARY_WIDTH] = UNLINKED_DTM
 	assert( h_link[xyToIX(-1, 0)] == UNLINKED_DTM )
 	assert( v_link[xyToIX(0, -1)] == UNLINKED_DTM )
-func make_h_link(ix):
+func dfs_make_h_link(ix):
 	h_link[ix] = LINKED
 	#degree[ix] += 1
 	#degree[ix+1] += 1
@@ -135,7 +135,7 @@ func make_h_link(ix):
 	lnk_count[ix] += 1
 	lnk_count[ix-ARY_WIDTH] += 1
 	connect_edge(ix, ix+1)
-func make_v_link(ix):
+func dfs_make_v_link(ix):
 	v_link[ix] = LINKED
 	#degree[ix] += 1
 	#degree[ix+ARY_WIDTH] += 1
@@ -143,7 +143,7 @@ func make_v_link(ix):
 	lnk_count[ix] += 1
 	lnk_count[ix-1] += 1
 	connect_edge(ix, ix+ARY_WIDTH)
-func unmake_h_link(ix):			# make_h_link() 処理を戻す
+func dfs_unmake_h_link(ix):			# dfs_make_h_link() 処理を戻す
 	h_link[ix] = EMPTY
 	#degree[ix] -= 1
 	#degree[ix+1] -= 1
@@ -151,7 +151,7 @@ func unmake_h_link(ix):			# make_h_link() 処理を戻す
 	lnk_count[ix] -= 1
 	lnk_count[ix-ARY_WIDTH] -= 1
 	unconnect_edge(ix, ix+1)
-func unmake_v_link(ix):			# make_v_link() 処理を戻す
+func dfs_unmake_v_link(ix):			# dfs_make_v_link() 処理を戻す
 	v_link[ix] = EMPTY
 	#degree[ix] -= 1
 	#degree[ix+ARY_WIDTH] -= 1
@@ -159,19 +159,19 @@ func unmake_v_link(ix):			# make_v_link() 処理を戻す
 	lnk_count[ix] -= 1
 	lnk_count[ix-1] -= 1
 	unconnect_edge(ix, ix+ARY_WIDTH)
-func make_h_unlink(ix):
+func dfs_make_h_unlink(ix):
 	h_link[ix] = UNLINKED
 	ul_count[ix] += 1
 	ul_count[ix-ARY_WIDTH] += 1
-func make_v_unlink(ix):
+func dfs_make_v_unlink(ix):
 	v_link[ix] = UNLINKED
 	ul_count[ix] += 1
 	ul_count[ix-1] += 1
-func unmake_h_unlink(ix):			# make_h_unlink() 処理を戻す
+func dfs_unmake_h_unlink(ix):			# dfs_make_h_unlink() 処理を戻す
 	h_link[ix] = EMPTY
 	ul_count[ix] -= 1
 	ul_count[ix-ARY_WIDTH] -= 1
-func unmake_v_unlink(ix):			# make_v_unlink() 処理を戻す
+func dfs_unmake_v_unlink(ix):			# dfs_make_v_unlink() 処理を戻す
 	v_link[ix] = EMPTY
 	ul_count[ix] -= 1
 	ul_count[ix-1] -= 1
@@ -220,6 +220,70 @@ func init_find_all_loop():
 	sx = -1
 	sy = 0
 	clear_edges()
+func rand_h_link(ix):
+	if randi() % 2 == 1:
+		dfs_make_h_link(ix)
+	else:
+		dfs_make_h_unlink(ix)
+func rand_v_link(ix):
+	if randi() % 2 == 1:
+		dfs_make_v_link(ix)
+	else:
+		dfs_make_v_unlink(ix)
+func build_loop_random():
+	if finished: return
+	#check_wall()
+	n_step += 1
+	is_loop = false
+	# 末端に向かって探索
+	sx += 1
+	if sx > N_HORZ:
+		sx = 0
+		sy += 1
+		if sy > N_VERT:
+			fwd = false
+			sy -= 1
+			sx = N_HORZ
+	var ix = xyToIX(sx, sy)
+	var uld = ul_degree[ix]
+	if ul_degree[ix] == 0:			# 上・左 両方非接続済みの場合
+		if h_link[ix] == EMPTY:
+			if v_link[ix] == EMPTY:
+				rand_h_link(ix)
+				if h_link[ix] == LINKED:
+					dfs_make_v_link(ix)
+				else:
+					dfs_make_v_unlink(ix)
+			else:			# 下接続不可（下端の場合など）
+				dfs_make_h_unlink(ix)
+		else:				# 右接続不可（右端の場合など）
+			if v_link[ix] == EMPTY:
+				dfs_make_v_unlink(ix)
+			else:
+				pass
+	elif ul_degree[ix] == 1:			# 上・左 片方のみ接続済みの場合
+		if h_link[ix] == EMPTY:
+			rand_h_link(ix)
+			if v_link[ix] == EMPTY:		# 下端でない場合
+				if h_link[ix] == LINKED:
+					dfs_make_v_unlink(ix)
+				else:
+					dfs_make_v_link(ix)
+			if mate[ix] == 0 && mate[ix+1] == 0:
+				if n_end_pnt == 0:	# 閉路
+					#print("loop found.")
+					is_loop = true
+					n_looped += 1
+				sx += 1
+				fwd = false
+		elif v_link[ix] == EMPTY:
+			dfs_make_v_link(ix)
+		else:
+			fwd = false
+	elif ul_degree[ix] == 2:			# 上・左 両方接続済みの場合
+		if h_link[ix] == EMPTY: dfs_make_h_unlink(ix)
+		if v_link[ix] == EMPTY: dfs_make_v_unlink(ix)
+	
 func find_all_loop_SBS():
 	if finished: return
 	#check_wall()
@@ -249,71 +313,126 @@ func find_all_loop_SBS():
 		if fwd:
 			if h_link[ix] == EMPTY:
 				if v_link[ix] == EMPTY:
-					make_h_link(ix)
-					make_v_link(ix)
+					dfs_make_h_link(ix)
+					dfs_make_v_link(ix)
 				else:			# 下接続不可（下端の場合など）
-					make_h_unlink(ix)
+					dfs_make_h_unlink(ix)
 			else:				# 右接続不可（右端の場合など）
 				if v_link[ix] == EMPTY:
-					make_v_unlink(ix)
+					dfs_make_v_unlink(ix)
 				else:
 					pass
 			#check_wall()
 		else:	# バックトラッキング中
 			if h_link[ix] == LINKED && v_link[ix] == LINKED:
-				unmake_v_link(ix)
-				unmake_h_link(ix)
-				make_h_unlink(ix)
-				make_v_unlink(ix)
+				dfs_unmake_v_link(ix)
+				dfs_unmake_h_link(ix)
+				dfs_make_h_unlink(ix)
+				dfs_make_v_unlink(ix)
 				fwd = true
 			else:
-				if h_link[ix] == UNLINKED: unmake_h_unlink(ix)
-				if v_link[ix] == UNLINKED: unmake_v_unlink(ix)
+				if h_link[ix] == UNLINKED: dfs_unmake_h_unlink(ix)
+				if v_link[ix] == UNLINKED: dfs_unmake_v_unlink(ix)
 			#check_wall()
 	elif ul_degree[ix] == 1:			# 上・左 片方のみ接続済みの場合
 		if fwd:
 			if h_link[ix] == EMPTY:
 			
-				make_h_link(ix)
+				dfs_make_h_link(ix)
 				if v_link[ix] == EMPTY:		# 下端でない場合
-					make_v_unlink(ix)
+					dfs_make_v_unlink(ix)
 				if mate[ix] == 0 && mate[ix+1] == 0:
 					if n_end_pnt == 0:	# 閉路
-						print("loop found.")
+						#print("loop found.")
 						is_loop = true
 						n_looped += 1
 					sx += 1
 					fwd = false
 			elif v_link[ix] == EMPTY:
-				make_v_link(ix)
+				dfs_make_v_link(ix)
 			else:
 				fwd = false
 			#check_wall()
 		else:
 			if h_link[ix] == LINKED:
-				unmake_h_link(ix)
+				dfs_unmake_h_link(ix)
 				if v_link[ix] != UNLINKED_DTM:
-					make_h_unlink(ix)
-					make_v_link(ix)
+					dfs_make_h_unlink(ix)
+					dfs_make_v_link(ix)
 					fwd = true
 				else:
 					pass
 					#fwd = false
 			else:
 				if h_link[ix] == UNLINKED:
-					unmake_h_unlink(ix)
+					dfs_unmake_h_unlink(ix)
 				if v_link[ix] == LINKED:
-					unmake_v_link(ix)
+					dfs_unmake_v_link(ix)
 			#check_wall()
 	elif ul_degree[ix] == 2:			# 上・左 両方接続済みの場合
 		if fwd:
-			if h_link[ix] == EMPTY: make_h_unlink(ix)
-			if v_link[ix] == EMPTY: make_v_unlink(ix)
+			if h_link[ix] == EMPTY: dfs_make_h_unlink(ix)
+			if v_link[ix] == EMPTY: dfs_make_v_unlink(ix)
 			#check_wall()
 		else:
-			if h_link[ix] == UNLINKED: unmake_h_unlink(ix)
-			if v_link[ix] == UNLINKED: unmake_v_unlink(ix)
+			if h_link[ix] == UNLINKED: dfs_unmake_h_unlink(ix)
+			if v_link[ix] == UNLINKED: dfs_unmake_v_unlink(ix)
 			#check_wall()
+#
+func make_h_link(ix):
+	h_link[ix] = LINKED
+	degree[ix] += 1
+	degree[ix+1] += 1
+	lnk_count[ix] += 1
+	lnk_count[ix-ARY_WIDTH] += 1
+func make_v_link(ix):
+	v_link[ix] = LINKED
+	degree[ix] += 1
+	degree[ix+ARY_WIDTH] += 1
+	lnk_count[ix] += 1
+	lnk_count[ix-1] += 1
+func unmake_h_link(ix):			# dfs_make_h_link() 処理を戻す
+	h_link[ix] = EMPTY
+	degree[ix] -= 1
+	degree[ix+1] -= 1
+	lnk_count[ix] -= 1
+	lnk_count[ix-ARY_WIDTH] -= 1
+func unmake_v_link(ix):			# dfs_make_v_link() 処理を戻す
+	v_link[ix] = EMPTY
+	degree[ix] -= 1
+	degree[ix+ARY_WIDTH] -= 1
+	lnk_count[ix] -= 1
+	lnk_count[ix-1] -= 1
+func rev_h_link(ix):
+	if h_link[ix] == LINKED:
+		unmake_h_link(ix)
+	else:
+		make_h_link(ix)
+func rev_v_link(ix):
+	if v_link[ix] == LINKED:
+		unmake_v_link(ix)
+	else:
+		make_v_link(ix)
+func move_edge_up(ix):	# 水平エッジを上に移動
+	unmake_h_link(ix)
+	rev_v_link(ix-ARY_WIDTH)
+	rev_v_link(ix-ARY_WIDTH+1)
+	make_h_link(ix-ARY_WIDTH)
+func move_edge_down(ix):	# 水平エッジを下に移動
+	unmake_h_link(ix)
+	rev_v_link(ix)
+	rev_v_link(ix+1)
+	make_h_link(ix+ARY_WIDTH)
+func move_edge_left(ix):	# 垂直エッジを左に移動
+	unmake_v_link(ix)
+	rev_h_link(ix-1)
+	rev_h_link(ix+ARY_WIDTH-1)
+	make_v_link(ix-1)
+func move_edge_right(ix):	# 垂直エッジを右に移動
+	unmake_v_link(ix)
+	rev_h_link(ix)
+	rev_h_link(ix+ARY_WIDTH)
+	make_v_link(ix+1)
 #
 func print_mate():
 	print("n_end_pnt = %d, mate:" % n_end_pnt)
@@ -324,13 +443,22 @@ func print_mate():
 			txt += "%2d " % mate[ix]
 		print(txt)
 	print("\n")
-func print_degree():
+func print_ul_degree():
 	print("vertex ul_degree:")
 	for y in range(N_VERT+1):
 		var txt = ""
 		for x in range(N_HORZ+1):
 			var ix = xyToIX(x, y)
 			txt += "%d " % ul_degree[ix]
+		print(txt)
+	print("\n")
+func print_degree():
+	print("vertex degree:")
+	for y in range(N_VERT+1):
+		var txt = ""
+		for x in range(N_HORZ+1):
+			var ix = xyToIX(x, y)
+			txt += "%d " % degree[ix]
 		print(txt)
 	print("\n")
 func print_count():

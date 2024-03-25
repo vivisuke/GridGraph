@@ -15,52 +15,67 @@ func xyToIX(x, y): return x + (y+1)*ARY_WIDTH
 
 
 func _ready():
+	seed(0)
 	bd = CBoard.new()
 	if true:
 		set_board_size(4)
+		bd.make_h_link(xyToIX(0,0))
+		bd.make_v_link(xyToIX(0,0))
+		bd.make_h_link(xyToIX(0,1))
+		bd.make_v_link(xyToIX(1,0))
+		bd.move_edge_down(xyToIX(0,1))
+		bd.move_edge_right(xyToIX(1,1))
+		bd.move_edge_right(xyToIX(2,1))
+		bd.move_edge_down(xyToIX(0,0))
+		bd.move_edge_up(xyToIX(1,1))
+		bd.move_edge_left(xyToIX(3,1))
+		bd.print_count()
+		bd.print_degree()
+	if false:
+		set_board_size(4)
 	if false:
 		set_board_size(5)
-		bd.make_h_link(xyToIX(0, 0))
-		bd.make_h_link(xyToIX(1, 0))
+		bd.dfs_make_h_link(xyToIX(0, 0))
+		bd.dfs_make_h_link(xyToIX(1, 0))
 		bd.print_board()
 		bd.print_mate()
-		bd.unmake_h_link(xyToIX(1, 0))
+		bd.dfs_unmake_h_link(xyToIX(1, 0))
 		bd.print_board()
 		bd.print_mate()
-		#bd.unmake_h_link(xyToIX(0, 0))
+		#bd.dfs_unmake_h_link(xyToIX(0, 0))
 	if false:
 		set_board_size(5)
-		bd.make_h_link(xyToIX(0, 0))
-		bd.make_v_link(xyToIX(0, 0))
-		bd.make_h_link(xyToIX(1, 1))
-		bd.make_h_unlink(xyToIX(0, 1))
-		bd.make_v_unlink(xyToIX(1, 0))
+		bd.dfs_make_h_link(xyToIX(0, 0))
+		bd.dfs_make_v_link(xyToIX(0, 0))
+		bd.dfs_make_h_link(xyToIX(1, 1))
+		bd.dfs_make_h_unlink(xyToIX(0, 1))
+		bd.dfs_make_v_unlink(xyToIX(1, 0))
 		bd.print_board()
 		bd.print_degree()
 		bd.print_count()
 		bd.print_mate()
-		#bd.unmake_h_link(xyToIX(0, 0))
-		#bd.unmake_v_link(xyToIX(0, 0))
+		#bd.dfs_unmake_h_link(xyToIX(0, 0))
+		#bd.dfs_unmake_v_link(xyToIX(0, 0))
 		#bd.print_board()
 		#bd.print_degree()
 		#bd.print_count()
 		#
 		bd.clear_edges()
-		bd.make_h_link(xyToIX(0, 0))
-		bd.make_v_link(xyToIX(0, 0))
-		bd.make_h_link(xyToIX(1, 0))
-		bd.make_v_unlink(xyToIX(1, 0))
-		bd.make_h_link(xyToIX(2, 0))
-		bd.make_v_unlink(xyToIX(2, 0))
-		bd.make_h_unlink(xyToIX(3, 0))
-		bd.make_v_link(xyToIX(3, 0))
-		bd.make_h_link(xyToIX(4, 0))
-		bd.make_v_link(xyToIX(4, 0))
-		bd.make_v_link(xyToIX(5, 0))
+		bd.dfs_make_h_link(xyToIX(0, 0))
+		bd.dfs_make_v_link(xyToIX(0, 0))
+		bd.dfs_make_h_link(xyToIX(1, 0))
+		bd.dfs_make_v_unlink(xyToIX(1, 0))
+		bd.dfs_make_h_link(xyToIX(2, 0))
+		bd.dfs_make_v_unlink(xyToIX(2, 0))
+		bd.dfs_make_h_unlink(xyToIX(3, 0))
+		bd.dfs_make_v_link(xyToIX(3, 0))
+		bd.dfs_make_h_link(xyToIX(4, 0))
+		bd.dfs_make_v_link(xyToIX(4, 0))
+		bd.dfs_make_v_link(xyToIX(5, 0))
 		#bd.print_board()
 		#bd.print_mate()
-		bd.make_h_link(xyToIX(0, 1))
-		bd.make_h_link(xyToIX(2, 1))
+		bd.dfs_make_h_link(xyToIX(0, 1))
+		bd.dfs_make_h_link(xyToIX(2, 1))
 		bd.print_board()
 		bd.print_degree()
 		bd.print_count()
@@ -85,16 +100,18 @@ func _input(event):
 	#	_on_step_1_button_pressed()
 	pass
 
-func do_step(n):
+func do_step(n, find_loop=false):
 	var start = Time.get_ticks_msec()
 	for i in range(n):
-		bd.find_all_loop_SBS()
+		#bd.find_all_loop_SBS()
+		bd.build_loop_random()
 		if bd.finished: break
+		if find_loop && bd.is_loop: break
 	var end = Time.get_ticks_msec()
 	bd.print_board()
 	bd.print_degree()
-	#bd.print_count()
 	bd.print_mate()
+	bd.print_count()
 	$NStepLabel.text = "#%d" % bd.n_step
 	$NLoopLabel.text = "#Loop: %d" % bd.n_looped
 	$MessLabel.text = ("#%d loop, "%bd.n_looped) if bd.is_loop else ""
@@ -124,6 +141,6 @@ func _on_restart_button_pressed():
 	$Board/Grid.queue_redraw()
 	pass # Replace with function body.
 
-
-
-
+func _on_next_button_pressed():
+	do_step(1000*1000, true)
+	pass # Replace with function body.
