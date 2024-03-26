@@ -429,7 +429,7 @@ func can_move_edge_up(ix) -> bool:	# 水平エッジを上に移動可能？
 	return true
 func can_move_edge_down(ix) -> bool:	# 水平エッジを下に移動可能？
 	if h_link[ix] != LINKED: return false
-	if v_link[ix+ARY_WIDTH] == UNLINKED_DTM || v_link[ix+ARY_WIDTH+1] == UNLINKED_DTM:
+	if v_link[ix] == UNLINKED_DTM || v_link[ix+1] == UNLINKED_DTM:
 		return false
 	if h_link[ix+ARY_WIDTH] != EMPTY: return false
 	if v_link[ix] == EMPTY && degree[ix+ARY_WIDTH] == 2:

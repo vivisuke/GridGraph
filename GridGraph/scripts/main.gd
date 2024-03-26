@@ -18,15 +18,23 @@ func xyToIX(x, y): return x + (y+1)*ARY_WIDTH
 func _ready():
 	#seed(0)
 	bd = CBoard.new()
+	$Board/Grid.h_link = bd.h_link
+	$Board/Grid.v_link = bd.v_link
 	if true:
-		set_board_size(4)
-		bd.make_h_link(xyToIX(1,2))
-		bd.make_v_link(xyToIX(1,2))
-		bd.make_h_link(xyToIX(1,3))
-		bd.make_v_link(xyToIX(2,2))
+		set_board_size(5)
+		#bd.make_h_link(xyToIX(1,2))
+		#bd.make_v_link(xyToIX(1,2))
+		#bd.make_h_link(xyToIX(1,3))
+		#bd.make_v_link(xyToIX(2,2))
+		for x in range(N_HORZ):
+			bd.make_h_link(xyToIX(x, 0))
+			bd.make_h_link(xyToIX(x, N_VERT))
+			bd.make_v_link(xyToIX(0, x))
+			bd.make_v_link(xyToIX(N_VERT, x))
 		bd.print_board()
 		bd.print_degree()
 		bd.print_count()
+		print(bd.can_move_edge_down(xyToIX(1,3)))
 		mv_lst = bd.list_movable_edges()
 		print_dir_ix(mv_lst)
 		#print(lst)

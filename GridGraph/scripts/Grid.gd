@@ -35,6 +35,7 @@ var v_link = []
 func xyToIX(x, y): return x + (y+1)*ARY_WIDTH
 
 func _draw():
+	if h_link.is_empty() || v_link.is_empty(): return
 	# エッジ線・非連結 X 描画
 	for y in range(N_VERT+1):
 		var py = y * CELL_WIDTH
