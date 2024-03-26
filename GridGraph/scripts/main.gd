@@ -22,6 +22,9 @@ func _ready():
 	$Board/Grid.v_link = bd.v_link
 	if true:
 		set_board_size(5)
+		bd.gen_proper_loop()
+	if false:
+		set_board_size(5)
 		#bd.make_h_link(xyToIX(1,2))
 		#bd.make_v_link(xyToIX(1,2))
 		#bd.make_h_link(xyToIX(1,3))
@@ -122,8 +125,8 @@ func _ready():
 		bd.print_count()
 		bd.print_mate()
 	#
-	$Board/Grid.h_link = bd.h_link
-	$Board/Grid.v_link = bd.v_link
+	#$Board/Grid.h_link = bd.h_link
+	#$Board/Grid.v_link = bd.v_link
 	$Board/Grid.queue_redraw()
 func set_board_size(n):
 	N_HORZ = n
@@ -142,6 +145,9 @@ func _input(event):
 		if event.as_text() == "Space":
 			#print("S")
 			move_edge_random()
+		elif event.as_text() == "Right":
+			bd.gen_proper_loop()
+			$Board/Grid.queue_redraw()
 	#	_on_step_1_button_pressed()
 	pass
 func print_dir_ix(lst):

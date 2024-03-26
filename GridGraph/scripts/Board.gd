@@ -488,6 +488,34 @@ func list_movable_edges() -> Array:
 			if can_move_edge_down(ix): lst.push_back(ix*4 + MOVE_DOWN)
 	return lst
 #
+func gen__outer_loop():		# 最外周ループ作成
+	for x in range(N_HORZ):
+		make_h_link(xyToIX(x, 0))
+		make_h_link(xyToIX(x, N_VERT))
+		make_v_link(xyToIX(0, x))
+		make_v_link(xyToIX(N_VERT, x))
+func move_edge_dir_ix(dix):
+	var dir = dix % 4
+	var ix = dix / 4
+	if dir == MOVE_UP:
+		move_edge_up(ix)
+	elif dir == MOVE_LEFT:
+		move_edge_left(ix)
+	elif dir == MOVE_RIGHT:
+		move_edge_right(ix)
+	elif dir == MOVE_DOWN:
+		move_edge_down(ix)
+func gen_proper_loop():
+	clear_edges()
+	gen__outer_loop()
+	for k in range(100):
+		var lst = list_movable_edges()
+		if lst.is_empty(): break
+		var i = 0
+		if lst.size() > 1:
+			i = randi() % lst.size()
+		move_edge_dir_ix(lst[i])
+#
 func print_mate():
 	print("n_end_pnt = %d, mate:" % n_end_pnt)
 	for y in range(N_VERT+1):
