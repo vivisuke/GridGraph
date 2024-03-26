@@ -506,8 +506,8 @@ func move_edge_dir_ix(dix):
 	elif dir == MOVE_DOWN:
 		move_edge_down(ix)
 func is_there_00() -> bool:			# ０が縦 or 横に並んでいるか？
-	for y in range(N_VERT-1):
-		for x in range(N_HORZ-1):
+	for y in range(N_VERT):
+		for x in range(N_HORZ):
 			var ix = xyToIX(x, y)
 			if lnk_count[ix] == 0 && (lnk_count[ix+1] == 0 || lnk_count[ix+ARY_WIDTH] == 0):
 				return true

@@ -21,8 +21,9 @@ func _ready():
 	$Board/Grid.h_link = bd.h_link
 	$Board/Grid.v_link = bd.v_link
 	if true:
-		set_board_size(5)
+		set_board_size(4)
 		bd.gen_proper_loop()
+		bd.print_count()
 	if false:
 		set_board_size(5)
 		#bd.make_h_link(xyToIX(1,2))
@@ -148,6 +149,7 @@ func _input(event):
 		elif event.as_text() == "Right":
 			bd.gen_proper_loop()
 			$Board/Grid.queue_redraw()
+			bd.print_count()
 	#	_on_step_1_button_pressed()
 	pass
 func print_dir_ix(lst):
