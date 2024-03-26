@@ -505,16 +505,25 @@ func move_edge_dir_ix(dix):
 		move_edge_right(ix)
 	elif dir == MOVE_DOWN:
 		move_edge_down(ix)
+func is_there_00() -> bool:			# ０が縦 or 横に並んでいるか？
+	for y in range(N_VERT-1):
+		for x in range(N_HORZ-1):
+			var ix = xyToIX(x, y)
+			if lnk_count[ix] == 0 && (lnk_count[ix+1] == 0 || lnk_count[ix+ARY_WIDTH] == 0):
+				return true
+	return false
 func gen_proper_loop():
 	clear_edges()
 	gen__outer_loop()
-	for k in range(100):
+	for k in range(10000):
 		var lst = list_movable_edges()
 		if lst.is_empty(): break
 		var i = 0
 		if lst.size() > 1:
 			i = randi() % lst.size()
 		move_edge_dir_ix(lst[i])
+		if k >= 100 && !is_there_00():
+			break
 #
 func print_mate():
 	print("n_end_pnt = %d, mate:" % n_end_pnt)
