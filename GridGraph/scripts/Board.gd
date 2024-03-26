@@ -62,7 +62,7 @@ func set_board_size(n):
 	ARY_SIZE = ARY_WIDTH * ARY_HEIGHT + 2
 	#
 	clue_num.resize(ARY_SIZE)
-	clue_num.fill(WALL)				# 空欄
+	clue_num.fill(WALL)				# 壁
 	clear_clue_nums()
 	h_link.resize(ARY_SIZE)
 	h_link.fill(0)
@@ -93,6 +93,12 @@ func check_wall():		# 壁部分が壊れていないかチェック
 	for y in range(N_HORZ+1):
 		assert( h_link[ix1+y*ARY_WIDTH] == UNLINKED_DTM )
 		assert( h_link[ix2+y*ARY_WIDTH] == UNLINKED_DTM )
+func copy_count_to_clue():
+	#clue_num.duplicate(lnk_count)
+	for y in range(N_VERT):
+		for x in range(N_HORZ):
+			var ix = xyToIX(x, y)
+			clue_num[ix] = lnk_count[ix]
 func clear_clue_nums():
 	for y in range(N_VERT):
 		for x in range(N_HORZ):
