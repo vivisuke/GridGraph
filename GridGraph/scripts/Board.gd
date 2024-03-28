@@ -28,13 +28,13 @@ const WALL = -2			# 壁
 var clue_num = []		# 手がかり数字
 var h_link = []			# 各格子点の右連結フラグ
 var v_link = []			# 各格子点の下連結フラグ
-var mate = []			# 連結先配列、端点以外は値: 0
+var mate: PackedByteArray = []			# 連結先配列、端点以外は値: 0
 var mate_stack = []		# リンク前値
 var degree = []			# 頂点次数
-var ul_degree = []		# 上・左方向頂点次数
-var lnk_count = []		# セル周囲連結エッジ数
-var ul_count = []		# セル周囲非連結エッジ数
-var dir_order = [LINK_UP, LINK_DOWN, LINK_LEFT, LINK_RIGHT]
+var ul_degree: PackedByteArray = []		# 上・左方向頂点次数
+var lnk_count: PackedByteArray = []		# セル周囲連結エッジ数
+var ul_count: PackedByteArray = []		# セル周囲非連結エッジ数
+var dir_order: PackedByteArray = [LINK_UP, LINK_DOWN, LINK_LEFT, LINK_RIGHT]
 var n_end_pnt = 0		# 端点数
 var is_loop = false
 var solved = false		# 解探索成功
@@ -530,6 +530,7 @@ func gen_proper_loop():
 		move_edge_dir_ix(lst[i])
 		if k >= 100 && !is_there_00():
 			break
+	copy_count_to_clue()
 #
 func print_mate():
 	print("n_end_pnt = %d, mate:" % n_end_pnt)

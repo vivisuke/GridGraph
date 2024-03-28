@@ -9,6 +9,7 @@ var ARY_HEIGHT
 var ARY_SIZE
 var bd
 var mv_lst
+var num_labels = []			# 線分数表示用ラベル
 
 var CBoard = preload("res://scripts/Board.gd")
 
@@ -22,8 +23,14 @@ func _ready():
 	$Board/Grid.v_link = bd.v_link
 	if true:
 		set_board_size(4)
+		bd.print_ul_degree()
+		bd.print_mate()
+	if false:
+		set_board_size(6)
+		init_labels()
 		bd.gen_proper_loop()
 		bd.print_count()
+		update_num_labels()
 	if false:
 		set_board_size(5)
 		#bd.make_h_link(xyToIX(1,2))
@@ -129,9 +136,33 @@ func _ready():
 	#$Board/Grid.h_link = bd.h_link
 	#$Board/Grid.v_link = bd.v_link
 	$Board/Grid.queue_redraw()
+func init_labels():
+	num_labels.resize(ARY_SIZE)
+	for y in range(N_VERT):
+		for x in range(N_HORZ):
+			var ix = xyToIX(x, y)
+			var px = x * CELL_WIDTH
+			var py = y * CELL_WIDTH
+			# 線分数表示用ラベル
+			var label = Label.new()
+			num_labels[ix] = label
+			label.add_theme_color_override("font_color", Color.BLACK)
+			label.add_theme_font_size_override("font_size", 64)
+			label.position = Vector2(px+24, py-5)
+			label.text = str((x+y)%4)
+			$Board/Grid.add_child(label)
+func update_num_labels():
+	for y in range(N_VERT):
+		for x in range(N_HORZ):
+			var ix = xyToIX(x, y)
+			if bd.clue_num[ix] < 0:
+				num_labels[ix].text = ""
+			else:
+				num_labels[ix].text = "%d" % bd.clue_num[ix]
 func set_board_size(n):
 	N_HORZ = n
 	N_VERT = n
+	CELL_WIDTH = 440.0 / n
 	ARY_WIDTH = N_HORZ + 1
 	ARY_HEIGHT = N_VERT + 2
 	ARY_SIZE = ARY_WIDTH * ARY_HEIGHT + 2
@@ -150,6 +181,7 @@ func _input(event):
 			bd.gen_proper_loop()
 			$Board/Grid.queue_redraw()
 			bd.print_count()
+			update_num_labels()
 	#	_on_step_1_button_pressed()
 	pass
 func print_dir_ix(lst):
